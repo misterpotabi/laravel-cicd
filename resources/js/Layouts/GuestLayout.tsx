@@ -21,7 +21,7 @@ export default function Guest({ children }: PropsWithChildren) {
 
             <footer className="mt-8 py-6">
                 <p className="text-center text-sm text-gray-500 dark:text-gray-400">
-                    &copy; {new Date().getFullYear()} Demo aplikasi untuk CICD
+                    &copy; {new Date().getFullYear()} Aplikasi Todo Laravel King PHP
                 </p>
             </footer>
         </div>
