@@ -28,7 +28,7 @@ jobs:
             git pull origin main
 
             echo "Generate .env..."
-            echo "Generate .env..."
+          
 
             printf "APP_NAME=\"%s\"\n" "${{ vars.APP_NAME }}" > .env
             printf "APP_ENV=%s\n" "${{ vars.APP_ENV }}" >> .env
