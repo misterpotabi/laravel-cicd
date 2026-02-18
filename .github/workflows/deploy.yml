@@ -20,63 +20,65 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            cd ${{ vars.PROJECT_PATH }}
+            script: |
+            set -e
 
-            echo "Pull latest code..."
-            git pull origin main
-
-            echo " Generate .env..."
-            echo "APP_NAME=${{ vars.APP_NAME }}" > .env
-            echo "APP_ENV=${{ secrets.APP_ENV }}" >> .env
-            echo "APP_KEY=${{ secrets.APP_KEY }}" >> .env
-            echo "APP_DEBUG=true" >> .env
-            echo "APP_URL=${{ vars.APP_URL }}" >> .env
-
-            echo "DB_CONNECTION=mysql" >> .env
-            echo "DB_HOST=${{ vars.DB_HOST }}" >> .env
-            echo "DB_PORT=3306" >> .env
-            echo "DB_DATABASE=${{ vars.DB_DATABASE }}" >> .env
-            echo "DB_USERNAME=${{ vars.DB_USERNAME }}" >> .env
-            echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
-
-            echo "CACHE_DRIVER=file" >> .env
-            echo "QUEUE_CONNECTION=sync" >> .env
-            echo "SESSION_DRIVER=file" >> .env
-            echo "SESSION_LIFETIME=120" >> .env
-
-            echo "Install Composer..."
-            composer install --optimize-autoloader --no-interaction
-
-            echo "Install Node..."
-            npm install
-
-            echo "Build Assets..."
-            npm run build
-
-            echo "Optimize Laravel..."
-            php artisan config:clear
-            php artisan cache:clear
-            php artisan route:clear
-            php artisan view:clear
-
-            php artisan config:cache
-            php artisan route:cache
-            php artisan view:cache
-
-            echo "Fix ownership..."
-            sudo chown -R ggmu:www-data /var/www/web-laravel-cicd
-
-            echo "Fix permissions..."
-            sudo chmod -R 775 storage bootstrap/cache
-
-            echo "Set group sticky bit..."
-            sudo chmod -R g+s storage bootstrap/cache
-
-
-            echo "Restart PHP..."
-            sudo systemctl reload php8.2-fpm
-
-            echo "Restart NGINX..."
-            sudo systemctl reload nginx
-
-            echo "Deploy selesai!!!"
+              cd ${{ vars.PROJECT_PATH }}
+            
+              echo "Pull latest code..."
+              git pull origin main
+            
+              echo "Generate .env..."
+              cat > .env <<EOF
+            APP_NAME="${{ vars.APP_NAME }}"
+            APP_ENV=${{ vars.APP_ENV }}
+            APP_KEY=${{ secrets.APP_KEY }}
+            APP_DEBUG=false
+            APP_URL=${{ vars.APP_URL }}
+            
+            DB_CONNECTION=mysql
+            DB_HOST=${{ vars.DB_HOST }}
+            DB_PORT=3306
+            DB_DATABASE=${{ vars.DB_DATABASE }}
+            DB_USERNAME=${{ vars.DB_USERNAME }}
+            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+            
+            CACHE_DRIVER=file
+            QUEUE_CONNECTION=sync
+            SESSION_DRIVER=file
+            SESSION_LIFETIME=120
+            EOF
+            
+              echo "Install Composer..."
+              composer install --no-dev --optimize-autoloader --no-interaction
+            
+              echo "Install Node..."
+              npm ci
+            
+              echo "Build Assets..."
+              npm run build
+            
+              echo "Optimize Laravel..."
+              php artisan config:clear
+              php artisan cache:clear
+              php artisan route:clear
+              php artisan view:clear
+            
+              php artisan config:cache
+              php artisan route:cache
+              php artisan view:cache
+            
+              echo "Fix ownership..."
+              sudo chown -R ggmu:www-data ${{ vars.PROJECT_PATH }}
+            
+              echo "Fix permissions..."
+              sudo chmod -R 775 storage bootstrap/cache
+              sudo chmod -R g+s storage bootstrap/cache
+            
+              echo "Restart PHP..."
+              sudo systemctl reload php8.2-fpm
+            
+              echo "Restart NGINX..."
+              sudo systemctl reload nginx
+            
+              echo "Deploy selesai!!!"
