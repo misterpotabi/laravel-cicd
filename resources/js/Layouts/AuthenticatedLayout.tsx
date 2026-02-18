@@ -183,7 +183,7 @@ export default function Authenticated({
             <footer className="mt-auto border-t border-gray-100 bg-white py-6 dark:border-gray-800 dark:bg-gray-800">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <p className="text-center text-sm text-gray-500 dark:text-gray-400">
-                        &copy; {new Date().getFullYear()} Aplikasi Todo Laravel King PHP!
+                        &copy; {new Date().getFullYear()} Aplikasi Todo Laravel King PHP
                     </p>
                 </div>
             </footer>
