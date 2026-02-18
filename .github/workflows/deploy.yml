@@ -58,7 +58,8 @@ jobs:
             composer install --no-dev --optimize-autoloader --no-interaction
 
             echo "Install Node..."
-            npm ci
+            npm install --legacy-peer-deps
+
 
             echo "Build Assets..."
             npm run build
