@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Test SSH Connection
+      - name: Level 1 - SSH Connection
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.VPS_HOST }}
