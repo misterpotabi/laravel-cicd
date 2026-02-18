@@ -30,26 +30,27 @@ jobs:
             
               echo "Generate .env..."
               cat > .env <<EOF
-            APP_NAME="${{ vars.APP_NAME }}"
-            APP_ENV=${{ vars.APP_ENV }}
-            APP_KEY=${{ secrets.APP_KEY }}
-            APP_DEBUG=false
-            APP_URL=${{ vars.APP_URL }}
-            
-            DB_CONNECTION=mysql
-            DB_HOST=${{ vars.DB_HOST }}
-            DB_PORT=3306
-            DB_DATABASE=${{ vars.DB_DATABASE }}
-            DB_USERNAME=${{ vars.DB_USERNAME }}
-            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-            
-            CACHE_DRIVER=file
-            QUEUE_CONNECTION=sync
-            SESSION_DRIVER=file
-            SESSION_LIFETIME=120
-            EOF
+              APP_NAME="${{ vars.APP_NAME }}"
+              APP_ENV=${{ vars.APP_ENV }}
+              APP_KEY=${{ secrets.APP_KEY }}
+              APP_DEBUG=false
+              APP_URL=${{ vars.APP_URL }}
+              
+              DB_CONNECTION=mysql
+              DB_HOST=${{ vars.DB_HOST }}
+              DB_PORT=3306
+              DB_DATABASE=${{ vars.DB_DATABASE }}
+              DB_USERNAME=${{ vars.DB_USERNAME }}
+              DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+              
+              CACHE_DRIVER=file
+              QUEUE_CONNECTION=sync
+              SESSION_DRIVER=file
+              SESSION_LIFETIME=120
+              EOF
             
               echo "Install Composer..."
+              rm composer.lock
               composer install --no-dev --optimize-autoloader --no-interaction
             
               echo "Install Node..."
