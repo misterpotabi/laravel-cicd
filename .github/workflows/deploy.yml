@@ -20,66 +20,65 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            script: |
             set -e
 
-              cd ${{ vars.PROJECT_PATH }}
+            cd ${{ vars.PROJECT_PATH }}
+
+            echo "Pull latest code..."
+            git pull origin main
+
+            echo "Generate .env..."
+            echo "Generate .env..."
+
+            printf "APP_NAME=\"%s\"\n" "${{ vars.APP_NAME }}" > .env
+            printf "APP_ENV=%s\n" "${{ vars.APP_ENV }}" >> .env
+            printf "APP_KEY=%s\n" "${{ secrets.APP_KEY }}" >> .env
+            printf "APP_DEBUG=false\n" >> .env
+            printf "APP_URL=%s\n\n" "${{ vars.APP_URL }}" >> .env
             
-              echo "Pull latest code..."
-              git pull origin main
+            printf "DB_CONNECTION=mysql\n" >> .env
+            printf "DB_HOST=%s\n" "${{ vars.DB_HOST }}" >> .env
+            printf "DB_PORT=3306\n" >> .env
+            printf "DB_DATABASE=%s\n" "${{ vars.DB_DATABASE }}" >> .env
+            printf "DB_USERNAME=%s\n" "${{ vars.DB_USERNAME }}" >> .env
+            printf "DB_PASSWORD=%s\n\n" "${{ secrets.DB_PASSWORD }}" >> .env
             
-              echo "Generate .env..."
-              cat > .env <<EOF
-              APP_NAME="${{ vars.APP_NAME }}"
-              APP_ENV=${{ vars.APP_ENV }}
-              APP_KEY=${{ secrets.APP_KEY }}
-              APP_DEBUG=false
-              APP_URL=${{ vars.APP_URL }}
-              
-              DB_CONNECTION=mysql
-              DB_HOST=${{ vars.DB_HOST }}
-              DB_PORT=3306
-              DB_DATABASE=${{ vars.DB_DATABASE }}
-              DB_USERNAME=${{ vars.DB_USERNAME }}
-              DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-              
-              CACHE_DRIVER=file
-              QUEUE_CONNECTION=sync
-              SESSION_DRIVER=file
-              SESSION_LIFETIME=120
-              EOF
-            
-              echo "Install Composer..."
-              rm composer.lock
-              composer install --no-dev --optimize-autoloader --no-interaction
-            
-              echo "Install Node..."
-              npm ci
-            
-              echo "Build Assets..."
-              npm run build
-            
-              echo "Optimize Laravel..."
-              php artisan config:clear
-              php artisan cache:clear
-              php artisan route:clear
-              php artisan view:clear
-            
-              php artisan config:cache
-              php artisan route:cache
-              php artisan view:cache
-            
-              echo "Fix ownership..."
-              sudo chown -R ggmu:www-data ${{ vars.PROJECT_PATH }}
-            
-              echo "Fix permissions..."
-              sudo chmod -R 775 storage bootstrap/cache
-              sudo chmod -R g+s storage bootstrap/cache
-            
-              echo "Restart PHP..."
-              sudo systemctl reload php8.2-fpm
-            
-              echo "Restart NGINX..."
-              sudo systemctl reload nginx
-            
-              echo "Deploy selesai!!!"
+            printf "CACHE_DRIVER=file\n" >> .env
+            printf "QUEUE_CONNECTION=sync\n" >> .env
+            printf "SESSION_DRIVER=file\n" >> .env
+            printf "SESSION_LIFETIME=120\n" >> .env
+
+
+            echo "Install Composer..."
+            composer install --no-dev --optimize-autoloader --no-interaction
+
+            echo "Install Node..."
+            npm ci
+
+            echo "Build Assets..."
+            npm run build
+
+            echo "Optimize Laravel..."
+            php artisan config:clear
+            php artisan cache:clear
+            php artisan route:clear
+            php artisan view:clear
+
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
+
+            echo "Fix ownership..."
+            sudo chown -R ggmu:www-data ${{ vars.PROJECT_PATH }}
+
+            echo "Fix permissions..."
+            sudo chmod -R 775 storage bootstrap/cache
+            sudo chmod -R g+s storage bootstrap/cache
+
+            echo "Restart PHP..."
+            sudo systemctl reload php8.2-fpm
+
+            echo "Restart NGINX..."
+            sudo systemctl reload nginx
+
+            echo "Deploy selesai!!!"
