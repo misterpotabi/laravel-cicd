@@ -55,7 +55,7 @@ jobs:
 
 
             echo "Install Composer..."
-            composer install --no-dev --optimize-autoloader --no-interaction
+            composer install --optimize-autoloader --no-interaction
 
             echo "Install Node..."
             npm install --legacy-peer-deps
