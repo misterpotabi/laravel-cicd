@@ -31,21 +31,21 @@ jobs:
 
 
             echo "Generate .env..."
-          
+
 
             printf "APP_NAME=\"%s\"\n" "${{ vars.APP_NAME }}" > .env
             printf "APP_ENV=%s\n" "${{ vars.APP_ENV }}" >> .env
             printf "APP_KEY=%s\n" "${{ secrets.APP_KEY }}" >> .env
             printf "APP_DEBUG=false\n" >> .env
             printf "APP_URL=%s\n\n" "${{ vars.APP_URL }}" >> .env
-            
+
             printf "DB_CONNECTION=mysql\n" >> .env
             printf "DB_HOST=%s\n" "${{ vars.DB_HOST }}" >> .env
             printf "DB_PORT=3306\n" >> .env
             printf "DB_DATABASE=%s\n" "${{ vars.DB_DATABASE }}" >> .env
             printf "DB_USERNAME=%s\n" "${{ vars.DB_USERNAME }}" >> .env
             printf "DB_PASSWORD=%s\n\n" "${{ secrets.DB_PASSWORD }}" >> .env
-            
+
             printf "CACHE_DRIVER=file\n" >> .env
             printf "QUEUE_CONNECTION=sync\n" >> .env
             printf "SESSION_DRIVER=file\n" >> .env
@@ -74,6 +74,7 @@ jobs:
             php artisan view:cache
 
             echo "Fix ownership..."
+            # ggmu DIGANTI DENGAN USERNAME VPS YANG KELEN GUNAKAN
             sudo chown -R ggmu:www-data ${{ vars.PROJECT_PATH }}
 
             echo "Fix permissions..."
